@@ -44,6 +44,6 @@ git commit -m "初始化提交：将本地代码强制推送到 GitHub" 2>/dev/n
 # 强制推送到远程仓库
 # -----------------------------
 echo "🚀 强制推送到 GitHub..."
-git push origin master --force
+git push origin main --force
 
 echo "✅ 完成！"
