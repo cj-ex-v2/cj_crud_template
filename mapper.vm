@@ -1,0 +1,52 @@
+## filename=${context.javaBeanName}Mapper, folder=
+package ${package}.${moduleName}.mapper;
+
+import ${package}.${moduleName}.mysql.${className};
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * ${tableComment} - Mapper 接口
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Mapper
+public interface ${context.javaBeanName}Mapper extends BaseMapper<${className}> {
+
+#if(${hasUniqueKey})
+    /**
+     * 根据 ${uniqueKeyComment} 查询
+     */
+    ${className} findBy${uniqueKeyMethodName}(@Param("${uniqueKeyAttrName}") ${uniqueKeyType} ${uniqueKeyAttrName});
+
+#end
+    /**
+     * 列表查询
+     */
+    List<${className}> list(
+#foreach ($column in $queryColumns)
+            @Param("${column.attrName}") ${column.attrType} ${column.attrName}#if($foreach.hasNext),#end
+
+#end
+    );
+
+    /**
+     * 插入
+     */
+    int insert(${className} entity);
+
+    /**
+     * 更新
+     */
+    int update(${className} entity);
+
+    /**
+     * 逻辑删除
+     */
+    int logicalDelete(@Param("id") Long id,
+                      @Param("updateUser") String updateUser);
+}

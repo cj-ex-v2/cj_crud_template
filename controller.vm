@@ -1,0 +1,111 @@
+## filename=${context.javaBeanName}Controller, folder=
+package ${package}.${moduleName}.controller;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import ${package}.${moduleName}.reqquery.${className}ReqQuery;
+import ${package}.${moduleName}.requpdate.${className}ReqUpdate;
+import ${package}.${moduleName}.resp.${className}Resp;
+import ${package}.${moduleName}.service.${className}Service;
+import com.cjlabs.web.threadlocal.FmkResult;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * ${tableComment} - Controller
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Slf4j
+@RestController
+@RequestMapping("${requestMapping}")
+public class ${context.javaBeanName}Controller {
+
+    @Autowired
+    private ${className}Service ${classNameLower}Service;
+
+    /**
+     * 分页查询
+     */
+    @PostMapping("/page")
+    public FmkResult<IPage<${className}Resp>> page(@RequestBody ${className}ReqQuery query) {
+        log.info("${className}Controller|page|query={}", query);
+        IPage<${className}Resp> page = ${classNameLower}Service.pageQuery(query);
+        return FmkResult.ok(page);
+    }
+
+    /**
+     * 查询所有（不分页）
+     */
+    @GetMapping("/list")
+    public FmkResult<List<${className}Resp>> list() {
+        log.info("${className}Controller|list");
+        List<${className}Resp> list = ${classNameLower}Service.listAll();
+        return FmkResult.ok(list);
+    }
+
+    /**
+     * 根据 ID 查询
+     */
+    @GetMapping("/get/{id}")
+    public FmkResult<${className}Resp> getById(@PathVariable Long id) {
+        log.info("${className}Controller|getById|id={}", id);
+        ${className}Resp resp = ${classNameLower}Service.getById(id);
+        return FmkResult.ok(resp);
+    }
+
+#if(${hasUniqueKey})
+    /**
+     * 根据 ${uniqueKeyComment} 查询
+     */
+    @GetMapping("/getBy${uniqueKeyMethodName}/{${uniqueKeyAttrName}}")
+    public FmkResult<${className}Resp> getBy${uniqueKeyMethodName}(@PathVariable ${uniqueKeyType} ${uniqueKeyAttrName}) {
+        log.info("${className}Controller|getBy${uniqueKeyMethodName}|${uniqueKeyAttrName}={}", ${uniqueKeyAttrName});
+        ${className}Resp resp = ${classNameLower}Service.getBy${uniqueKeyMethodName}(${uniqueKeyAttrName});
+        return FmkResult.ok(resp);
+    }
+
+#end
+    /**
+     * 新增
+     */
+    @PostMapping("/save")
+    public FmkResult<Boolean> save(@RequestBody ${className}ReqUpdate req) {
+        log.info("${className}Controller|save|req={}", req);
+        boolean result = ${classNameLower}Service.save(req);
+        return FmkResult.ok(result);
+    }
+
+    /**
+     * 更新
+     */
+    @PostMapping("/update")
+    public FmkResult<Boolean> update(@RequestBody ${className}ReqUpdate req) {
+        log.info("${className}Controller|update|req={}", req);
+        boolean result = ${classNameLower}Service.update(req);
+        return FmkResult.ok(result);
+    }
+
+    /**
+     * 删除
+     */
+    @DeleteMapping("/remove/{id}")
+    public FmkResult<Boolean> remove(@PathVariable Long id) {
+        log.info("${className}Controller|remove|id={}", id);
+        boolean result = ${classNameLower}Service.remove(id);
+        return FmkResult.ok(result);
+    }
+
+    /**
+     * 批量删除
+     */
+    @PostMapping("/removeBatch")
+    public FmkResult<Boolean> removeBatch(@RequestBody List<Long> ids) {
+        log.info("${className}Controller|removeBatch|ids={}", ids);
+        boolean result = ${classNameLower}Service.removeBatch(ids);
+        return FmkResult.ok(result);
+    }
+}

@@ -1,0 +1,36 @@
+## filename=${context.javaBeanName}ReqUpdate, folder=
+package ${package}.${moduleName}.requpdate;
+
+import lombok.Data;
+
+#if(${hasDate})
+import java.time.LocalDateTime;
+#end
+#if(${hasBigDecimal})
+import java.math.BigDecimal;
+#end
+
+/**
+ * ${tableComment} - 创建/更新请求
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Data
+public class ${context.javaBeanName}ReqUpdate {
+    
+    /**
+     * ID（更新时必填）
+     */
+    private Long id;
+    
+#foreach ($column in $columns)
+#if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'create_user' && $column.columnName != 'create_date' && $column.columnName != 'update_user' && $column.columnName != 'update_date')
+    /**
+     * ${column.comments}
+     */
+    private ${column.attrType} ${column.attrName};
+    
+#end
+#end
+}

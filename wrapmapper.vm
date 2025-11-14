@@ -1,0 +1,86 @@
+## filename=${context.javaBeanName}WrapMapper, folder=
+package ${package}.${moduleName}.wrapmapper;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cjlabs.db.mp.FmkService;
+import ${package}.${moduleName}.mapper.${className}Mapper;
+import ${package}.${moduleName}.mysql.${className};
+import ${package}.${moduleName}.reqquery.${className}ReqQuery;
+
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * ${tableComment} - WrapMapper
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Slf4j
+@Service
+public class ${context.javaBeanName}WrapMapper extends FmkService<${className}Mapper, ${className}> {
+    
+    protected ${className}WrapMapper(${className}Mapper mapper) {
+        super(mapper);
+    }
+
+#if(${hasUniqueKey})
+    /**
+     * 根据 ${uniqueKeyComment} 查询
+     */
+    public ${className} getBy${uniqueKeyMethodName}(${uniqueKeyType} ${uniqueKeyAttrName}) {
+        if (#if(${uniqueKeyType} == 'String')StringUtils.isBlank(${uniqueKeyAttrName})#else${uniqueKeyAttrName} == null#end) {
+            return null;
+        }
+        LambdaQueryWrapper<${className}> lambdaQuery = buildLambdaQuery();
+        lambdaQuery.eq(${className}::get${uniqueKeyMethodName}, ${uniqueKeyAttrName});
+        return super.getByCondition(lambdaQuery);
+    }
+
+#end
+    /**
+     * 分页查询
+     */
+    public IPage<${className}> pageQuery(${className}ReqQuery query) {
+        // 构建分页对象
+        Page<${className}> page = new Page<>(query.getPageNum(), query.getPageSize());
+        
+        // 构建查询条件
+        LambdaQueryWrapper<${className}> lambdaQuery = buildLambdaQuery();
+        
+#foreach ($column in $queryColumns)
+#if($column.attrType == 'String')
+        // ${column.comments}（模糊查询）
+        if (StringUtils.isNotBlank(query.get${column.attrNameCapital}())) {
+            lambdaQuery.like(${className}::get${column.attrNameCapital}, query.get${column.attrNameCapital}());
+        }
+        
+#else
+        // ${column.comments}
+        if (query.get${column.attrNameCapital}() != null) {
+            lambdaQuery.eq(${className}::get${column.attrNameCapital}, query.get${column.attrNameCapital}());
+        }
+        
+#end
+#end
+        // 排序
+        lambdaQuery.orderByAsc(${className}::getId);
+        
+        // 执行分页查询
+        return super.page(page, lambdaQuery);
+    }
+
+    /**
+     * 查询所有（不分页）
+     */
+    public List<${className}> listAll() {
+        LambdaQueryWrapper<${className}> lambdaQuery = buildLambdaQuery();
+        lambdaQuery.orderByAsc(${className}::getId);
+        return super.list(lambdaQuery);
+    }
+}
