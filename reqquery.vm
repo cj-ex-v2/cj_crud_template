@@ -1,43 +1,21 @@
-## filename=${context.javaBeanName}ReqQuery, folder=
-package ${package}.${moduleName}.reqquery;
-
+## filename=${context.javaBeanName}ReqQuery.java, folder=reqquery
 import lombok.Data;
 
-#if(${hasDate})
-import java.time.LocalDateTime;
-#end
-#if(${hasBigDecimal})
-import java.math.BigDecimal;
-#end
-
 /**
- * ${tableComment} - 查询请求
+ * ${table.tableName} ${table.comment}
  *
- * @author ${author}
- * @date ${datetime}
+ * ${context.date} ${context.time}
  */
 @Data
 public class ${context.javaBeanName}ReqQuery {
     
-    /**
-     * 当前页码（从1开始）
-     */
-    private Integer pageNum = 1;
-    
-    /**
-     * 每页大小
-     */
-    private Integer pageSize = 10;
-    
 #foreach ($column in $columns)
-#if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'create_user' && $column.columnName != 'create_date' && $column.columnName != 'update_user' && $column.columnName != 'update_date')
-#if($column.attrType == 'String' || $column.columnType == 'ENUM')
+#if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'update_date')
     /**
-     * ${column.comments}
+     * ${column.comment}
      */
-    private ${column.attrType} ${column.attrName};
-    
-#end
+    private ${column.javaTypeBox} ${column.javaFieldName};
+
 #end
 #end
 }

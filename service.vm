@@ -1,209 +1,104 @@
-## filename=${context.javaBeanName}Service, folder=
-package ${package}.${moduleName}.service;
-
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cjlabs.db.datasource.FmkTransactionTemplateUtil;
-import ${package}.${moduleName}.mysql.${className};
-import ${package}.${moduleName}.reqquery.${className}ReqQuery;
-import ${package}.${moduleName}.requpdate.${className}ReqUpdate;
-import ${package}.${moduleName}.resp.${className}Resp;
-import ${package}.${moduleName}.wrapmapper.${className}WrapMapper;
+## filename=${context.javaBeanName}Service.java, folder=service
+import com.cjlabs.db.domain.FmkPageResponse;
+import com.cjlabs.db.domain.FmkRequest;
 import com.cjlabs.web.check.FmkCheckUtil;
 import com.cjlabs.web.exception.BusinessExceptionEnum;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
- * ${tableComment} - Service
+ * ${table.tableName} ${table.comment}
  *
- * @author ${author}
- * @date ${datetime}
+ * ${context.date} ${context.time}
  */
 @Slf4j
 @Service
 public class ${context.javaBeanName}Service {
     
     @Autowired
-    private ${className}WrapMapper ${classNameLower}WrapMapper;
-    
-    @Autowired
-    private FmkTransactionTemplateUtil fmkTransactionTemplateUtil;
-
-    /**
-     * 根据 ID 查询
-     */
-    public ${className}Resp getById(Long id) {
-        if (id == null) {
-            return null;
-        }
-        ${className} entity = ${classNameLower}WrapMapper.getById(id);
-        return entity == null ? null : toResp(entity);
-    }
-
-#if(${hasUniqueKey})
-    /**
-     * 根据 ${uniqueKeyComment} 查询
-     */
-    public ${className}Resp getBy${uniqueKeyMethodName}(${uniqueKeyType} ${uniqueKeyAttrName}) {
-        ${className} entity = ${classNameLower}WrapMapper.getBy${uniqueKeyMethodName}(${uniqueKeyAttrName});
-        return entity == null ? null : toResp(entity);
-    }
-
-#end
-    /**
-     * 分页查询
-     */
-    public IPage<${className}Resp> pageQuery(${className}ReqQuery query) {
+    private ${context.javaBeanName}WrapMapper ${context.javaBeanNameLF}WrapMapper;
+	
+    public ${context.javaBeanName} getById(FmkRequest<Void> input) {
         // 参数校验
-        if (query.getPageNum() == null || query.getPageNum() < 1) {
-            query.setPageNum(1);
+        FmkCheckUtil.checkInput(Objects.isNull(input));
+        FmkCheckUtil.checkInput(StringUtils.isBlank(input.getBusinessKey()));
+
+        String id = input.getBusinessKey();
+        return ${context.javaBeanNameLF}WrapMapper.getById(id);
+    }
+
+    public boolean save(FmkRequest<${context.javaBeanName}> input) {
+        // 参数校验
+        FmkCheckUtil.checkInput(Objects.isNull(input));
+        FmkCheckUtil.checkInput(Objects.isNull(input.getRequest()));
+
+        ${context.javaBeanName} request = input.getRequest();
+        if (Objects.isNull(request)) {
+            return false;
         }
-        if (query.getPageSize() == null || query.getPageSize() < 1) {
-            query.setPageSize(10);
+
+        int saved = ${context.javaBeanNameLF}WrapMapper.save(request);
+        FmkCheckUtil.throwBusiness(saved == 0, BusinessExceptionEnum.DATA_NOT_FOUND);
+        return true;
+    }
+
+
+    public boolean update(FmkRequest<${context.javaBeanName}> input) {
+        // 参数校验
+        FmkCheckUtil.checkInput(Objects.isNull(input));
+        FmkCheckUtil.checkInput(Objects.isNull(input.getRequest()));
+
+        ${context.javaBeanName} request = input.getRequest();
+        if (Objects.isNull(request)) {
+            return false;
         }
-        if (query.getPageSize() > 100) {
-            query.setPageSize(100); // 限制最大每页数量
+        int updated = ${context.javaBeanNameLF}WrapMapper.updateById(request);
+        if (updated > 0) {
+            log.info("${context.javaBeanName}Service|update|update={}|id={}", updated, request.getId());
+            return true;
         }
-        
-        // 执行分页查询
-        IPage<${className}> entityPage = ${classNameLower}WrapMapper.pageQuery(query);
-        
-        // 转换为响应对象
-        Page<${className}Resp> respPage = new Page<>(
-            entityPage.getCurrent(), 
-            entityPage.getSize(), 
-            entityPage.getTotal()
-        );
-        
-        List<${className}Resp> respList = entityPage.getRecords().stream()
-            .map(this::toResp)
-            .collect(Collectors.toList());
-        
-        respPage.setRecords(respList);
-        return respPage;
+        return false;
+    }
+
+    public boolean deleteById(FmkRequest<Void> input) {
+        // 参数校验
+        FmkCheckUtil.checkInput(Objects.isNull(input));
+        FmkCheckUtil.checkInput(Objects.isNull(input.getBusinessKey()));
+
+        String businessKey = input.getBusinessKey();
+        if (businessKey == null) {
+            return false;
+        }
+        int deleted = ${context.javaBeanNameLF}WrapMapper.deleteById(businessKey);
+        if (removed > 0) {
+            log.info("${context.javaBeanName}Service|update|deleteById={}|id={}", deleted, businessKey);
+            return true;
+        }
+        return false;
     }
 
     /**
      * 查询所有（不分页）
      */
-    public List<${className}Resp> listAll() {
-        List<${className}> entityList = ${classNameLower}WrapMapper.listAll();
-        return entityList.stream()
-            .map(this::toResp)
-            .collect(Collectors.toList());
+    public List<${context.javaBeanName}> listAll() {
+        List<${context.javaBeanName}> entityList = ${context.javaBeanNameLF}WrapMapper.listAllLimitService();
+        return entityList;
     }
-
-    /**
-     * 新增
+    
+      /**
+     * 分页查询
      */
-    @Transactional(rollbackFor = Exception.class)
-    public boolean save(${className}ReqUpdate req) {
-        if (Objects.isNull(req)) {
-            return false;
-        }
-        
-#if(${hasUniqueKey})
-        // 检查 ${uniqueKeyComment} 是否已存在
-        ${className} existing = ${classNameLower}WrapMapper.getBy${uniqueKeyMethodName}(req.get${uniqueKeyMethodName}());
-        FmkCheckUtil.throwBusiness(existing != null, BusinessExceptionEnum.DATA_ALREADY_EXISTS);
-        
-#end
-        ${className} entity = toEntity(req);
-        entity.setCreateDate(LocalDateTime.now());
-        entity.setUpdateDate(LocalDateTime.now());
-        
-        int saved = ${classNameLower}WrapMapper.save(entity);
-        FmkCheckUtil.throwBusiness(saved == 0, BusinessExceptionEnum.DATA_NOT_FOUND);
-        
-        log.info("${className}Service|save|saved={}|id={}", saved, entity.getId());
-        return true;
-    }
+    public FmkPageResponse<${context.javaBeanName}> pageQuery(FmkRequest<${context.javaBeanName}ReqQuery> input) {
+        // 参数校验
+        FmkCheckUtil.checkInput(Objects.isNull(input));
+        FmkCheckUtil.checkInput(Objects.isNull(input.getRequest()));
 
-    /**
-     * 更新
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public boolean update(${className}ReqUpdate req) {
-        if (Objects.isNull(req) || Objects.isNull(req.getId())) {
-            return false;
-        }
-        
-        // 检查记录是否存在
-        ${className} existing = ${classNameLower}WrapMapper.getById(req.getId());
-        FmkCheckUtil.throwBusiness(existing == null, BusinessExceptionEnum.DATA_NOT_FOUND);
-        
-        ${className} entity = toEntity(req);
-        entity.setUpdateDate(LocalDateTime.now());
-        
-        int updated = ${classNameLower}WrapMapper.updateById(entity);
-        if (updated > 0) {
-            log.info("${className}Service|update|updated={}|id={}", updated, entity.getId());
-            return true;
-        }
-        return false;
-    }
+        // 执行分页查询
+        FmkPageResponse<${context.javaBeanName}> entityPage = ${context.javaBeanNameLF}Mapper.pageQuery(input);
 
-    /**
-     * 删除（逻辑删除）
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public boolean remove(Long id) {
-        if (id == null) {
-            return false;
-        }
-        
-        int removed = ${classNameLower}WrapMapper.removeById(id);
-        if (removed > 0) {
-            log.info("${className}Service|remove|removed={}|id={}", removed, id);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 批量删除
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public boolean removeBatch(List<Long> ids) {
-        if (ids == null || ids.isEmpty()) {
-            return false;
-        }
-        
-        int removed = ${classNameLower}WrapMapper.removeBatchByIds(ids);
-        log.info("${className}Service|removeBatch|removed={}|count={}", removed, ids.size());
-        return removed > 0;
-    }
-
-    /**
-     * 实体转响应对象
-     */
-    private ${className}Resp toResp(${className} entity) {
-        if (entity == null) {
-            return null;
-        }
-        ${className}Resp resp = new ${className}Resp();
-        BeanUtils.copyProperties(entity, resp);
-        return resp;
-    }
-
-    /**
-     * 请求对象转实体
-     */
-    private ${className} toEntity(${className}ReqUpdate req) {
-        if (req == null) {
-            return null;
-        }
-        ${className} entity = new ${className}();
-        BeanUtils.copyProperties(req, entity);
-        return entity;
+        return entityPage;
     }
 }

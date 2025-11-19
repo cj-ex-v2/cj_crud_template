@@ -1,33 +1,21 @@
-## filename=${context.javaBeanName}Resp, folder=
-package ${package}.${moduleName}.resp;
-
+## filename=${context.javaBeanName}Resp.java, folder=resp
 import lombok.Data;
 
-import java.time.LocalDateTime;
-#if(${hasBigDecimal})
-import java.math.BigDecimal;
-#end
-
 /**
- * ${tableComment} - 响应
+ * ${table.tableName} ${table.comment}
  *
- * @author ${author}
- * @date ${datetime}
+ * ${context.date} ${context.time}
  */
 @Data
 public class ${context.javaBeanName}Resp {
     
-    /**
-     * 主键ID
-     */
-    private Long id;
     
 #foreach ($column in $columns)
-#if($column.columnName != 'id' && $column.columnName != 'del_flag')
+#if($column.columnName != 'del_flag')
     /**
-     * ${column.comments}
+     * ${column.comment}
      */
-    private ${column.attrType} ${column.attrName};
+    private ${column.javaTypeBox} ${column.javaFieldName};
     
 #end
 #end

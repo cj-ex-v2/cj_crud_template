@@ -1,37 +1,28 @@
-## filename=${context.javaBeanName}, folder=mysql
-package ${package}.${moduleName}.mysql;
-
+## filename=${context.javaBeanName}.java, folder=mysql
 import com.cjlabs.db.domain.FmkBaseEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-#if(${hasBigDecimal})
-import java.math.BigDecimal;
-#end
-#if(${hasDate})
-import java.time.LocalDateTime;
-#end
-
 /**
- * ${tableComment}
+ * ${table.tableName} ${table.comment}
  *
- * @author ${author}
- * @date ${datetime}
+ * ${context.date} ${context.time}
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ${className} extends FmkBaseEntity {
+public class ${context.javaBeanName} extends FmkBaseEntity {
 
 #foreach ($column in $columns)
 #if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'create_user' && $column.columnName != 'create_date' && $column.columnName != 'update_user' && $column.columnName != 'update_date')
     /**
-     * ${column.comments}
+     * ${column.comment}
      */
-    private ${column.attrType} ${column.attrName};
+    private ${column.javaTypeBox} ${column.javaFieldName};
 
 #end
 #end

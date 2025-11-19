@@ -1,0 +1,36 @@
+## filename=${context.javaBeanName}Convert.java, folder=
+import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+
+public class ConfigChainConvert {
+
+    public static ${context.javaBeanName}Resp toResp(${context.javaBeanName} input) {
+        if (Objects.isNull(input)) {
+            return null;
+        }
+        ${context.javaBeanName}Resp ${context.javaBeanNameLF}Resp = new ${context.javaBeanName}Resp();
+        
+        #foreach ($column in $columns)
+        #if($column.columnName != 'id' && $column.columnName != 'del_flag' 
+        && $column.columnName != 'create_user' && $column.columnName != 'create_date'
+        && $column.columnName != 'update_user' && $column.columnName != 'update_date'
+        )
+        ${context.javaBeanNameLF}Resp.set${column.javaFieldNameUF}(input.get${column.javaFieldNameUF}());
+        #end
+        #end
+        
+        return ${context.javaBeanNameLF}Resp;
+    }
+
+    public static List<${context.javaBeanName}Resp> toResp(List<${context.javaBeanName}> inputList) {
+        if (CollectionUtils.isEmpty(inputList)) {
+            return Lists.newArrayList();
+        }
+        return inputList.stream().map(${context.javaBeanName}Convert::toResp).collect(Collectors.toList());
+    }
+}

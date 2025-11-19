@@ -1,23 +1,22 @@
-## filename=${context.javaBeanName}Controller, folder=
-package ${package}.${moduleName}.controller;
-
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import ${package}.${moduleName}.reqquery.${className}ReqQuery;
-import ${package}.${moduleName}.requpdate.${className}ReqUpdate;
-import ${package}.${moduleName}.resp.${className}Resp;
-import ${package}.${moduleName}.service.${className}Service;
+## filename=${context.javaBeanName}Controller.java, folder=controller
+import com.cjlabs.db.domain.FmkPageResponse;
+import com.cjlabs.db.domain.FmkRequest;
 import com.cjlabs.web.threadlocal.FmkResult;
+
 import lombok.extern.slf4j.Slf4j;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 /**
- * ${tableComment} - Controller
+ * ${table.tableName} ${table.comment}
  *
- * @author ${author}
- * @date ${datetime}
+ * ${context.date} ${context.time}
  */
 @Slf4j
 @RestController
@@ -25,87 +24,60 @@ import java.util.List;
 public class ${context.javaBeanName}Controller {
 
     @Autowired
-    private ${className}Service ${classNameLower}Service;
+    private ${context.javaBeanName}Service ${context.javaBeanNameLF}Service;
 
     /**
      * 分页查询
      */
     @PostMapping("/page")
-    public FmkResult<IPage<${className}Resp>> page(@RequestBody ${className}ReqQuery query) {
-        log.info("${className}Controller|page|query={}", query);
-        IPage<${className}Resp> page = ${classNameLower}Service.pageQuery(query);
-        return FmkResult.ok(page);
+    public FmkResult<IPage<${context.javaBeanName}Resp>> page(@RequestBody FmkRequest<${context.javaBeanName}ReqQuery> input) {
+        IPage<${context.javaBeanName}Resp> page = ${context.javaBeanNameLF}Service.pageQuery(input);
+        return FmkResult.success(page);
     }
 
     /**
      * 查询所有（不分页）
      */
-    @GetMapping("/list")
-    public FmkResult<List<${className}Resp>> list() {
-        log.info("${className}Controller|list");
-        List<${className}Resp> list = ${classNameLower}Service.listAll();
-        return FmkResult.ok(list);
+    @PostMapping("/list")
+    public FmkResult<List<${context.javaBeanName}Resp>> list() {
+        List<${context.javaBeanName}Resp> list = ${context.javaBeanNameLF}Service.listAll();
+        return FmkResult.success(list);
     }
 
     /**
      * 根据 ID 查询
      */
-    @GetMapping("/get/{id}")
-    public FmkResult<${className}Resp> getById(@PathVariable Long id) {
-        log.info("${className}Controller|getById|id={}", id);
-        ${className}Resp resp = ${classNameLower}Service.getById(id);
-        return FmkResult.ok(resp);
+    @PostMapping("/get/{id}")
+    public FmkResult<${context.javaBeanName}Resp> getById(FmkRequest<Void> input) {
+        ${context.javaBeanName}Resp resp = ${context.javaBeanNameLF}Service.getById(input);
+        return FmkResult.success(resp);
     }
 
-#if(${hasUniqueKey})
-    /**
-     * 根据 ${uniqueKeyComment} 查询
-     */
-    @GetMapping("/getBy${uniqueKeyMethodName}/{${uniqueKeyAttrName}}")
-    public FmkResult<${className}Resp> getBy${uniqueKeyMethodName}(@PathVariable ${uniqueKeyType} ${uniqueKeyAttrName}) {
-        log.info("${className}Controller|getBy${uniqueKeyMethodName}|${uniqueKeyAttrName}={}", ${uniqueKeyAttrName});
-        ${className}Resp resp = ${classNameLower}Service.getBy${uniqueKeyMethodName}(${uniqueKeyAttrName});
-        return FmkResult.ok(resp);
-    }
-
-#end
     /**
      * 新增
      */
     @PostMapping("/save")
-    public FmkResult<Boolean> save(@RequestBody ${className}ReqUpdate req) {
-        log.info("${className}Controller|save|req={}", req);
-        boolean result = ${classNameLower}Service.save(req);
-        return FmkResult.ok(result);
+    public FmkResult<Boolean> save(@RequestBody FmkRequest<${context.javaBeanName}ReqUpdate> input) {
+        boolean result = ${context.javaBeanNameLF}Service.save(input);
+        return FmkResult.success(result);
     }
 
     /**
      * 更新
      */
-    @PostMapping("/update")
-    public FmkResult<Boolean> update(@RequestBody ${className}ReqUpdate req) {
-        log.info("${className}Controller|update|req={}", req);
-        boolean result = ${classNameLower}Service.update(req);
-        return FmkResult.ok(result);
+    @PostMapping("/update/byId")
+    public FmkResult<Boolean> update(@RequestBody FmkRequest<${context.javaBeanName}ReqUpdate> input) {
+        boolean result = ${context.javaBeanNameLF}Service.update(input);
+        return FmkResult.success(result);
     }
 
     /**
      * 删除
      */
-    @DeleteMapping("/remove/{id}")
-    public FmkResult<Boolean> remove(@PathVariable Long id) {
-        log.info("${className}Controller|remove|id={}", id);
-        boolean result = ${classNameLower}Service.remove(id);
-        return FmkResult.ok(result);
+    @PostMapping("/delete/byId")
+    public FmkResult<Boolean> remove(@RequestBody FmkRequest<Void> input) {
+        boolean result = ${context.javaBeanNameLF}Service.deleteById(input);
+        return FmkResult.success(result);
     }
 
-    /**
-     * 批量删除
-     */
-    @PostMapping("/removeBatch")
-    public FmkResult<Boolean> removeBatch(@RequestBody List<Long> ids) {
-        log.info("${className}Controller|removeBatch|ids={}", ids);
-        boolean result = ${classNameLower}Service.removeBatch(ids);
-        return FmkResult.ok(result);
-    }
 }

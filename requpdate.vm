@@ -1,4 +1,4 @@
-## filename=${context.javaBeanName}ReqUpdate, folder=
+## filename=${context.javaBeanName}ReqUpdate.java, folder=requpdate
 package ${package}.${moduleName}.requpdate;
 
 import lombok.Data;

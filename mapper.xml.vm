@@ -1,18 +1,19 @@
-## filename=${context.javaBeanName}mapper.xml, folder=
+## filename=${context.javaBeanName}mapper.xml, folder=mapper.xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="${package}.${moduleName}.mapper.${className}Mapper">
+<mapper namespace=".mapper.${context.javaBeanName}Mapper">
 
-    <resultMap id="${className}ResultMap" type="${package}.${moduleName}.mysql.${className}">
+    <resultMap id="${context.javaBeanName}ResultMap" type=".mysql.${context.javaBeanName}">
         <id property="id" column="id"/>
 #foreach ($column in $columns)
 #if($column.columnName != 'id')
-        <result property="${column.attrName}" column="${column.columnName}"/>
+        <result property="${column.javaFieldName}" column="${column.columnName}"/>
 #end
 #end
+
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -21,76 +22,7 @@
     </sql>
 
     <sql id="Base_Table">
-        ${tableName}
+        ${table.tableName}
     </sql>
-
-#if(${hasUniqueKey})
-    <select id="findBy${uniqueKeyMethodName}" resultMap="${className}ResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM
-        <include refid="Base_Table"/>
-        WHERE ${uniqueKeyColumnName} = #{${uniqueKeyAttrName}}
-        AND del_flag = 'NORMAL'
-        LIMIT 1
-    </select>
-
-#end
-    <select id="list" resultMap="${className}ResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM
-        <include refid="Base_Table"/>
-        <where>
-#foreach ($column in $queryColumns)
-#if($column.attrType == 'String')
-            <if test="${column.attrName} != null and ${column.attrName} != ''">
-                AND ${column.columnName} = #{${column.attrName}}
-            </if>
-#else
-            <if test="${column.attrName} != null">
-                AND ${column.columnName} = #{${column.attrName}}
-            </if>
-#end
-#end
-            AND del_flag = 'NORMAL'
-        </where>
-        ORDER BY id ASC
-    </select>
-
-    <insert id="insert"
-            parameterType="${package}.${moduleName}.mysql.${className}"
-            useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO
-        <include refid="Base_Table"/>
-        (#foreach ($column in $columns)${column.columnName}#if($foreach.hasNext), #end#end)
-        VALUES (#foreach ($column in $columns)#{${column.attrName}}#if($foreach.hasNext), #end#end)
-    </insert>
-
-    <update id="update" parameterType="${package}.${moduleName}.mysql.${className}">
-        UPDATE
-        <include refid="Base_Table"/>
-        <set>
-#foreach ($column in $columns)
-#if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'create_user' && $column.columnName != 'create_date')
-#if($column.attrType == 'String')
-            <if test="${column.attrName} != null">${column.columnName} = #{${column.attrName}},</if>
-#else
-            <if test="${column.attrName} != null">${column.columnName} = #{${column.attrName}},</if>
-#end
-#end
-#end
-        </set>
-        WHERE id = #{id}
-    </update>
-
-    <update id="logicalDelete">
-        UPDATE
-        <include refid="Base_Table"/>
-        SET del_flag = 'ABNORMAL',
-            update_user = #{updateUser},
-            update_date = UNIX_TIMESTAMP(NOW(3)) * 1000
-        WHERE id = #{id}
-    </update>
 
 </mapper>

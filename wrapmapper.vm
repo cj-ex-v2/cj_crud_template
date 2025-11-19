@@ -1,86 +1,68 @@
-## filename=${context.javaBeanName}WrapMapper, folder=
-package ${package}.${moduleName}.wrapmapper;
+## filename=${context.javaBeanName}WrapMapper.java, folder=wrapmapper
+import com.cjlabs.db.mp.FmkService;
+import com.cjlabs.db.domain.FmkOrderItem;
+import com.cjlabs.db.domain.FmkPageResponse;
+import com.cjlabs.db.domain.FmkRequest;
+import com.cjlabs.web.check.FmkCheckUtil;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cjlabs.db.mp.FmkService;
-import ${package}.${moduleName}.mapper.${className}Mapper;
-import ${package}.${moduleName}.mysql.${className};
-import ${package}.${moduleName}.reqquery.${className}ReqQuery;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
- * ${tableComment} - WrapMapper
+ * ${table.tableName} ${table.comment}
  *
- * @author ${author}
- * @date ${datetime}
+ * ${context.date} ${context.time}
  */
 @Slf4j
 @Service
-public class ${context.javaBeanName}WrapMapper extends FmkService<${className}Mapper, ${className}> {
+public class ${context.javaBeanName}WrapMapper extends FmkService<${context.javaBeanName}Mapper, ${context.javaBeanName}> {
     
-    protected ${className}WrapMapper(${className}Mapper mapper) {
+    protected ${context.javaBeanName}WrapMapper(${context.javaBeanName}Mapper mapper) {
         super(mapper);
     }
 
-#if(${hasUniqueKey})
-    /**
-     * 根据 ${uniqueKeyComment} 查询
-     */
-    public ${className} getBy${uniqueKeyMethodName}(${uniqueKeyType} ${uniqueKeyAttrName}) {
-        if (#if(${uniqueKeyType} == 'String')StringUtils.isBlank(${uniqueKeyAttrName})#else${uniqueKeyAttrName} == null#end) {
-            return null;
-        }
-        LambdaQueryWrapper<${className}> lambdaQuery = buildLambdaQuery();
-        lambdaQuery.eq(${className}::get${uniqueKeyMethodName}, ${uniqueKeyAttrName});
-        return super.getByCondition(lambdaQuery);
-    }
-
-#end
-    /**
+ 	/**
      * 分页查询
      */
-    public IPage<${className}> pageQuery(${className}ReqQuery query) {
-        // 构建分页对象
-        Page<${className}> page = new Page<>(query.getPageNum(), query.getPageSize());
-        
-        // 构建查询条件
-        LambdaQueryWrapper<${className}> lambdaQuery = buildLambdaQuery();
-        
-#foreach ($column in $queryColumns)
-#if($column.attrType == 'String')
-        // ${column.comments}（模糊查询）
-        if (StringUtils.isNotBlank(query.get${column.attrNameCapital}())) {
-            lambdaQuery.like(${className}::get${column.attrNameCapital}, query.get${column.attrNameCapital}());
-        }
-        
-#else
-        // ${column.comments}
-        if (query.get${column.attrNameCapital}() != null) {
-            lambdaQuery.eq(${className}::get${column.attrNameCapital}, query.get${column.attrNameCapital}());
-        }
-        
-#end
-#end
-        // 排序
-        lambdaQuery.orderByAsc(${className}::getId);
-        
-        // 执行分页查询
-        return super.page(page, lambdaQuery);
-    }
+    public FmkPageResponse<${context.javaBeanName}> pageQuery(FmkRequest<${context.javaBeanName}ReqQuery> input) {
+        // 参数校验
+        FmkCheckUtil.checkInput(Objects.isNull(input));
+        FmkCheckUtil.checkInput(Objects.isNull(input.getRequest()));
 
-    /**
-     * 查询所有（不分页）
-     */
-    public List<${className}> listAll() {
-        LambdaQueryWrapper<${className}> lambdaQuery = buildLambdaQuery();
-        lambdaQuery.orderByAsc(${className}::getId);
-        return super.list(lambdaQuery);
+        // 构建分页对象
+        Page<${context.javaBeanName}> page = new Page<>(input.getCurrent(), input.getSize());
+        ${context.javaBeanName}ReqQuery request = input.getRequest();
+
+        // 构建查询条件
+        LambdaQueryWrapper<${context.javaBeanName}> lambdaQuery = buildLambdaQuery();
+
+        // 链编码模糊查询
+        if (StringUtils.isNotBlank(request.getChainCode())) {
+            lambdaQuery.like(ConfigChain::getChainCode, request.getChainCode());
+        }
+
+        // 链状态精确查询
+        if (StringUtils.isNotBlank(request.getChainStatus())) {
+            lambdaQuery.eq(ConfigChain::getChainStatus, request.getChainStatus());
+        }
+
+        // 是否可见
+        if (StringUtils.isNotBlank(request.getVisibleFlag())) {
+            lambdaQuery.eq(ConfigChain::getVisibleFlag, request.getVisibleFlag());
+        }
+
+        List<FmkOrderItem> orderItemList = input.getOrderItemList();
+
+        // 执行分页查询
+        IPage<${context.javaBeanName}> dbPage = super.pageByCondition(page, lambdaQuery, orderItemList);
+
+        return FmkPageResponse.of(dbPage);
     }
 }
