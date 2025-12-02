@@ -1,4 +1,4 @@
-## filename=${context.javaBeanName}Convert.java, folder=
+## filename=${context.javaBeanName}Convert.java, folder=convert
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 

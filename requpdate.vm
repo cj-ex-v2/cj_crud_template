@@ -1,20 +1,10 @@
 ## filename=${context.javaBeanName}ReqUpdate.java, folder=requpdate
-package ${package}.${moduleName}.requpdate;
-
 import lombok.Data;
 
-#if(${hasDate})
-import java.time.LocalDateTime;
-#end
-#if(${hasBigDecimal})
-import java.math.BigDecimal;
-#end
-
 /**
- * ${tableComment} - 创建/更新请求
+ * ${table.tableName} ${table.comment}
  *
- * @author ${author}
- * @date ${datetime}
+ * ${context.date} ${context.time}
  */
 @Data
 public class ${context.javaBeanName}ReqUpdate {
@@ -25,12 +15,12 @@ public class ${context.javaBeanName}ReqUpdate {
     private Long id;
     
 #foreach ($column in $columns)
-#if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'create_user' && $column.columnName != 'create_date' && $column.columnName != 'update_user' && $column.columnName != 'update_date')
+#if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'update_date')
     /**
-     * ${column.comments}
+     * ${column.comment}
      */
-    private ${column.attrType} ${column.attrName};
-    
+    private ${column.javaTypeBox} ${column.javaFieldName};
+
 #end
 #end
 }
