@@ -34,13 +34,9 @@ public class ${context.javaBeanName}Service {
         return ${context.javaBeanNameLF}WrapMapper.getById(id);
     }
 
-    public boolean save(FmkRequest<${context.javaBeanName}> input) {
-        // 参数校验
-        FmkCheckUtil.checkInput(Objects.isNull(input));
-        FmkCheckUtil.checkInput(Objects.isNull(input.getRequest()));
-
-        ${context.javaBeanName} request = input.getRequest();
+    public boolean save(${context.javaBeanName} request) {
         if (Objects.isNull(request)) {
+        	log.info("${context.javaBeanName}Service|update|request is null");
             return false;
         }
 
@@ -50,13 +46,9 @@ public class ${context.javaBeanName}Service {
     }
 
 
-    public boolean update(FmkRequest<${context.javaBeanName}> input) {
-        // 参数校验
-        FmkCheckUtil.checkInput(Objects.isNull(input));
-        FmkCheckUtil.checkInput(Objects.isNull(input.getRequest()));
-
-        ${context.javaBeanName} request = input.getRequest();
+    public boolean update(${context.javaBeanName} request) {
         if (Objects.isNull(request)) {
+        	log.info("${context.javaBeanName}Service|update|request is null");
             return false;
         }
         int updated = ${context.javaBeanNameLF}WrapMapper.updateById(request);
@@ -74,6 +66,7 @@ public class ${context.javaBeanName}Service {
 
         String businessKey = input.getBusinessKey();
         if (businessKey == null) {
+        	log.info("${context.javaBeanName}Service|update|businessKey is null");
             return false;
         }
         int deleted = ${context.javaBeanNameLF}WrapMapper.deleteById(businessKey);

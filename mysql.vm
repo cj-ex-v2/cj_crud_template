@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class ${context.javaBeanName} extends FmkBaseEntity {
 
 #foreach ($column in $columns)
-#if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'create_user' && $column.columnName != 'create_date' && $column.columnName != 'update_user' && $column.columnName != 'update_date')
+#if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'create_user' && $column.columnName != 'create_date' && $column.columnName != 'update_user' && $column.columnName != 'update_date' && $column.columnName != 'trace_id')
     /**
      * ${column.comment}
      */

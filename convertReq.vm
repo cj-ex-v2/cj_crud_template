@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-public class ConfigChainConvert {
+public class ${context.javaBeanName}ReqConvert {
 
     public static ${context.javaBeanName} toDb(${context.javaBeanName}ReqQuery input) {
         if (Objects.isNull(input)) {
@@ -19,6 +19,7 @@ public class ConfigChainConvert {
         #if($column.columnName != 'id' && $column.columnName != 'del_flag' 
         && $column.columnName != 'create_user' && $column.columnName != 'create_date'
         && $column.columnName != 'update_user' && $column.columnName != 'update_date'
+        && $column.columnName != 'trace_id'
         )
         ${context.javaBeanNameLF}.set${column.javaFieldNameUF}(input.get${column.javaFieldNameUF}());
         #end
@@ -37,6 +38,26 @@ public class ConfigChainConvert {
         #if($column.columnName != 'id' && $column.columnName != 'del_flag' 
         && $column.columnName != 'create_user' && $column.columnName != 'create_date'
         && $column.columnName != 'update_user' && $column.columnName != 'update_date'
+        && $column.columnName != 'trace_id'
+        )
+        ${context.javaBeanNameLF}.set${column.javaFieldNameUF}(input.get${column.javaFieldNameUF}());
+        #end
+        #end
+        
+        return ${context.javaBeanNameLF};
+    }
+    
+    public static ${context.javaBeanName} toDb(${context.javaBeanName}ReqSave input) {
+        if (Objects.isNull(input)) {
+            return null;
+        }
+        ${context.javaBeanName} ${context.javaBeanNameLF} = new ${context.javaBeanName}();
+        
+        #foreach ($column in $columns)
+        #if($column.columnName != 'id' && $column.columnName != 'del_flag' 
+        && $column.columnName != 'create_user' && $column.columnName != 'create_date'
+        && $column.columnName != 'update_user' && $column.columnName != 'update_date'
+        && $column.columnName != 'trace_id'
         )
         ${context.javaBeanNameLF}.set${column.javaFieldNameUF}(input.get${column.javaFieldNameUF}());
         #end

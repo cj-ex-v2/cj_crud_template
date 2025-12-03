@@ -30,7 +30,7 @@ public class ${context.javaBeanName}Controller {
      */
     @PostMapping("/page")
     public FmkResult<FmkPageResponse<${context.javaBeanName}Resp>> page(@RequestBody FmkRequest<${context.javaBeanName}ReqQuery> input) {
-        FmkPageResponse<${context.javaBeanName}Resp> page = ${context.javaBeanNameLF}Service.pageQuery(input);
+        FmkPageResponse<${context.javaBeanName}Resp> page = ${context.javaBeanNameLF}ApiService.pageQuery(input);
         return FmkResult.success(page);
     }
 
@@ -39,7 +39,7 @@ public class ${context.javaBeanName}Controller {
      */
     @PostMapping("/list")
     public FmkResult<List<${context.javaBeanName}Resp>> list() {
-        List<${context.javaBeanName}Resp> list = ${context.javaBeanNameLF}Service.listAll();
+        List<${context.javaBeanName}Resp> list = ${context.javaBeanNameLF}ApiService.listAll();
         return FmkResult.success(list);
     }
 
@@ -48,7 +48,7 @@ public class ${context.javaBeanName}Controller {
      */
     @PostMapping("/get/{id}")
     public FmkResult<${context.javaBeanName}Resp> getById(FmkRequest<Void> input) {
-        ${context.javaBeanName}Resp resp = ${context.javaBeanNameLF}Service.getById(input);
+        ${context.javaBeanName}Resp resp = ${context.javaBeanNameLF}ApiService.getById(input);
         return FmkResult.success(resp);
     }
 
@@ -56,8 +56,8 @@ public class ${context.javaBeanName}Controller {
      * 新增
      */
     @PostMapping("/save")
-    public FmkResult<Boolean> save(@RequestBody FmkRequest<${context.javaBeanName}ReqUpdate> input) {
-        boolean result = ${context.javaBeanNameLF}Service.save(input);
+    public FmkResult<Boolean> save(@RequestBody FmkRequest<${context.javaBeanName}ReqSave> input) {
+        boolean result = ${context.javaBeanNameLF}ApiService.save(input);
         return FmkResult.success(result);
     }
 
@@ -66,7 +66,7 @@ public class ${context.javaBeanName}Controller {
      */
     @PostMapping("/update/byId")
     public FmkResult<Boolean> update(@RequestBody FmkRequest<${context.javaBeanName}ReqUpdate> input) {
-        boolean result = ${context.javaBeanNameLF}Service.update(input);
+        boolean result = ${context.javaBeanNameLF}ApiService.update(input);
         return FmkResult.success(result);
     }
 
@@ -75,7 +75,7 @@ public class ${context.javaBeanName}Controller {
      */
     @PostMapping("/delete/byId")
     public FmkResult<Boolean> remove(@RequestBody FmkRequest<Void> input) {
-        boolean result = ${context.javaBeanNameLF}Service.deleteById(input);
+        boolean result = ${context.javaBeanNameLF}ApiService.deleteById(input);
         return FmkResult.success(result);
     }
 

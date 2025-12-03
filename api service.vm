@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Service
-public class ${context.javaBeanName}Service {
+public class ${context.javaBeanName}ApiService {
     
     @Autowired
     private ${context.javaBeanName}Service ${context.javaBeanNameLF}Service;
@@ -30,9 +30,6 @@ public class ${context.javaBeanName}Service {
         FmkCheckUtil.checkInput(Objects.isNull(input));
         FmkCheckUtil.checkInput(StringUtils.isBlank(input.getBusinessKey()));
 
-        String id = input.getBusinessKey();
-        return ${context.javaBeanNameLF}WrapMapper.getById(id);
-        
         ${context.javaBeanName} ${context.javaBeanNameLF} = ${context.javaBeanNameLF}Service.getById(input);
         return ${context.javaBeanName}Convert.toResp(${context.javaBeanNameLF});
     }
@@ -44,7 +41,7 @@ public class ${context.javaBeanName}Service {
 
         ${context.javaBeanName} request = input.getRequest();
         if (Objects.isNull(request)) {
-            log.info("${context.javaBeanName}Service|save|request is null");
+            log.info("${context.javaBeanName}ApiService|save|request is null");
             return false;
         }
 
@@ -59,15 +56,10 @@ public class ${context.javaBeanName}Service {
 
         ${context.javaBeanName} request = input.getRequest();
         if (Objects.isNull(request)) {
-            log.info("${context.javaBeanName}Service|update|request is null");
+            log.info("${context.javaBeanName}ApiService|update|request is null");
             return false;
         }
-        int updated = ${context.javaBeanNameLF}Service.updateById(request);
-        if (updated > 0) {
-            log.info("${context.javaBeanName}Service|update|update={}|id={}", updated, request.getId());
-            return true;
-        }
-        return false;
+        return ${context.javaBeanNameLF}Service.update(request);
     }
 
     public boolean deleteById(FmkRequest<Void> input) {
@@ -77,15 +69,10 @@ public class ${context.javaBeanName}Service {
 
         String businessKey = input.getBusinessKey();
         if (businessKey == null) {
-        	log.info("${context.javaBeanName}Service|deleteById|request is null");
+        	log.info("${context.javaBeanName}ApiService|deleteById|request is null");
             return false;
         }
-        int deleted = ${context.javaBeanNameLF}Service.deleteById(businessKey);
-        if (removed > 0) {
-            log.info("${context.javaBeanName}Service|update|deleteById={}|id={}", deleted, businessKey);
-            return true;
-        }
-        return false;
+        return ${context.javaBeanNameLF}Service.deleteById(businessKey);
     }
 
     /**
@@ -93,7 +80,8 @@ public class ${context.javaBeanName}Service {
      */
     public List<${context.javaBeanName}> listAll() {
         List<${context.javaBeanName}> entityList = ${context.javaBeanNameLF}Service.listAllLimitService();
-        return entityList;
+        List<${context.javaBeanName}Resp> respList = ${context.javaBeanName}Convert.toResp(entityList);
+        return respList;
     }
     
       /**
@@ -107,6 +95,12 @@ public class ${context.javaBeanName}Service {
         // 执行分页查询
         FmkPageResponse<${context.javaBeanName}> entityPage = ${context.javaBeanNameLF}WrapMapper.pageQuery(input);
 
-        return entityPage;
+        if (Objects.isNull(entityPage) || CollectionUtils.isEmpty(entityPage.getRecords())) {
+            return FmkPageResponse.empty();
+        }
+
+        FmkPageResponse<${context.javaBeanName}Resp> pageResponse = FmkPageResponse.of(entityPage, ${context.javaBeanName}Convert::toResp);
+
+        return pageResponse;
     }
 }

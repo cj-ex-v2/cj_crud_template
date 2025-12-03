@@ -15,7 +15,7 @@ public class ${context.javaBeanName}ReqUpdate {
     private Long id;
     
 #foreach ($column in $columns)
-#if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'update_date')
+#if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'update_date' && $column.columnName != 'trace_id')
     /**
      * ${column.comment}
      */

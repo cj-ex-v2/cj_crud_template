@@ -1,4 +1,4 @@
-## filename=${context.javaBeanName}ReqQuery.java, folder=reqquery
+## filename=${context.javaBeanName}ReqSave.java, folder=reqsave
 import lombok.Data;
 
 /**
@@ -7,7 +7,12 @@ import lombok.Data;
  * ${context.date} ${context.time}
  */
 @Data
-public class ${context.javaBeanName}ReqQuery {
+public class ${context.javaBeanName}ReqSave {
+    
+    /**
+     * ID（更新时必填）
+     */
+    private Long id;
     
 #foreach ($column in $columns)
 #if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'update_date' && $column.columnName != 'trace_id')
