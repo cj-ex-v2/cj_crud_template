@@ -4,7 +4,6 @@ import com.cjlabs.db.domain.FmkRequest;
 import com.cjlabs.web.threadlocal.FmkResult;
 
 import lombok.extern.slf4j.Slf4j;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,14 +23,14 @@ import java.util.List;
 public class ${context.javaBeanName}Controller {
 
     @Autowired
-    private ${context.javaBeanName}Service ${context.javaBeanNameLF}Service;
+    private ${context.javaBeanName}ApiService ${context.javaBeanNameLF}ApiService;
 
     /**
      * 分页查询
      */
     @PostMapping("/page")
-    public FmkResult<IPage<${context.javaBeanName}Resp>> page(@RequestBody FmkRequest<${context.javaBeanName}ReqQuery> input) {
-        IPage<${context.javaBeanName}Resp> page = ${context.javaBeanNameLF}Service.pageQuery(input);
+    public FmkResult<FmkPageResponse<${context.javaBeanName}Resp>> page(@RequestBody FmkRequest<${context.javaBeanName}ReqQuery> input) {
+        FmkPageResponse<${context.javaBeanName}Resp> page = ${context.javaBeanNameLF}Service.pageQuery(input);
         return FmkResult.success(page);
     }
 

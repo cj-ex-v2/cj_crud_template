@@ -1,4 +1,4 @@
-## filename=${context.javaBeanName}Service.java, folder=service
+## filename=${context.javaBeanName}ApiService.java, folder=service
 import com.cjlabs.db.domain.FmkPageResponse;
 import com.cjlabs.db.domain.FmkRequest;
 import com.cjlabs.web.check.FmkCheckUtil;
@@ -23,15 +23,18 @@ import java.util.Objects;
 public class ${context.javaBeanName}Service {
     
     @Autowired
-    private ${context.javaBeanName}WrapMapper ${context.javaBeanNameLF}WrapMapper;
+    private ${context.javaBeanName}Service ${context.javaBeanNameLF}Service;
 	
-    public ${context.javaBeanName} getById(FmkRequest<Void> input) {
+    public ${context.javaBeanName}Resp getById(FmkRequest<Void> input) {
         // 参数校验
         FmkCheckUtil.checkInput(Objects.isNull(input));
         FmkCheckUtil.checkInput(StringUtils.isBlank(input.getBusinessKey()));
 
         String id = input.getBusinessKey();
         return ${context.javaBeanNameLF}WrapMapper.getById(id);
+        
+        ${context.javaBeanName} ${context.javaBeanNameLF} = ${context.javaBeanNameLF}Service.getById(input);
+        return ${context.javaBeanName}Convert.toResp(${context.javaBeanNameLF});
     }
 
     public boolean save(FmkRequest<${context.javaBeanName}> input) {
@@ -41,12 +44,11 @@ public class ${context.javaBeanName}Service {
 
         ${context.javaBeanName} request = input.getRequest();
         if (Objects.isNull(request)) {
+            log.info("${context.javaBeanName}Service|save|request is null");
             return false;
         }
 
-        int saved = ${context.javaBeanNameLF}WrapMapper.save(request);
-        FmkCheckUtil.throwBusiness(saved == 0, BusinessExceptionEnum.DATA_NOT_FOUND);
-        return true;
+        return ${context.javaBeanNameLF}Service.save(request);
     }
 
 
@@ -57,9 +59,10 @@ public class ${context.javaBeanName}Service {
 
         ${context.javaBeanName} request = input.getRequest();
         if (Objects.isNull(request)) {
+            log.info("${context.javaBeanName}Service|update|request is null");
             return false;
         }
-        int updated = ${context.javaBeanNameLF}WrapMapper.updateById(request);
+        int updated = ${context.javaBeanNameLF}Service.updateById(request);
         if (updated > 0) {
             log.info("${context.javaBeanName}Service|update|update={}|id={}", updated, request.getId());
             return true;
@@ -74,9 +77,10 @@ public class ${context.javaBeanName}Service {
 
         String businessKey = input.getBusinessKey();
         if (businessKey == null) {
+        	log.info("${context.javaBeanName}Service|deleteById|request is null");
             return false;
         }
-        int deleted = ${context.javaBeanNameLF}WrapMapper.deleteById(businessKey);
+        int deleted = ${context.javaBeanNameLF}Service.deleteById(businessKey);
         if (removed > 0) {
             log.info("${context.javaBeanName}Service|update|deleteById={}|id={}", deleted, businessKey);
             return true;
@@ -88,7 +92,7 @@ public class ${context.javaBeanName}Service {
      * 查询所有（不分页）
      */
     public List<${context.javaBeanName}> listAll() {
-        List<${context.javaBeanName}> entityList = ${context.javaBeanNameLF}WrapMapper.listAllLimitService();
+        List<${context.javaBeanName}> entityList = ${context.javaBeanNameLF}Service.listAllLimitService();
         return entityList;
     }
     

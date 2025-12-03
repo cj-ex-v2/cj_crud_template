@@ -43,20 +43,6 @@ public class ${context.javaBeanName}WrapMapper extends FmkService<${context.java
         // 构建查询条件
         LambdaQueryWrapper<${context.javaBeanName}> lambdaQuery = buildLambdaQuery();
 
-        // 链编码模糊查询
-        if (StringUtils.isNotBlank(request.getChainCode())) {
-            lambdaQuery.like(ConfigChain::getChainCode, request.getChainCode());
-        }
-
-        // 链状态精确查询
-        if (StringUtils.isNotBlank(request.getChainStatus())) {
-            lambdaQuery.eq(ConfigChain::getChainStatus, request.getChainStatus());
-        }
-
-        // 是否可见
-        if (StringUtils.isNotBlank(request.getVisibleFlag())) {
-            lambdaQuery.eq(ConfigChain::getVisibleFlag, request.getVisibleFlag());
-        }
 
         List<FmkOrderItem> orderItemList = input.getOrderItemList();
 
