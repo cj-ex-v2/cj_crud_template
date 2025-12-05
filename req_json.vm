@@ -1,4 +1,4 @@
-## filename=req_json, folder=
+## filename=${context.javaBeanName}_req_json, folder=
 {
     "request": {
     
