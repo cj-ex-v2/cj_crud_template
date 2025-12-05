@@ -15,7 +15,15 @@ public class ${context.javaBeanName}ReqSave {
     private Long id;
     
 #foreach ($column in $columns)
-#if($column.columnName != 'id' && $column.columnName != 'del_flag' && $column.columnName != 'update_date' && $column.columnName != 'trace_id')
+#if(
+$column.columnName != 'id' 
+&& $column.columnName != 'del_flag' 
+&& $column.columnName != 'create_user' 
+&& $column.columnName != 'create_date'
+&& $column.columnName != 'update_user' 
+&& $column.columnName != 'update_date'
+&& $column.columnName != 'trace_id'
+)
     /**
      * ${column.comment}
      */

@@ -27,6 +27,11 @@ public class ${context.javaBeanName}WrapMapper extends FmkService<${context.java
     protected ${context.javaBeanName}WrapMapper(${context.javaBeanName}Mapper mapper) {
         super(mapper);
     }
+    
+    @Override
+    protected Class<${context.javaBeanName}> getEntityClass() {
+        return ${context.javaBeanName}.class;
+    }
 
  	/**
      * 分页查询

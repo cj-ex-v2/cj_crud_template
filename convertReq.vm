@@ -1,11 +1,6 @@
 ## filename=${context.javaBeanName}ReqConvert.java, folder=convertReq
-import com.google.common.collect.Lists;
-import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
 
 public class ${context.javaBeanName}ReqConvert {
 
@@ -16,9 +11,12 @@ public class ${context.javaBeanName}ReqConvert {
         ${context.javaBeanName} ${context.javaBeanNameLF} = new ${context.javaBeanName}();
         
         #foreach ($column in $columns)
-        #if($column.columnName != 'id' && $column.columnName != 'del_flag' 
-        && $column.columnName != 'create_user' && $column.columnName != 'create_date'
-        && $column.columnName != 'update_user' && $column.columnName != 'update_date'
+        #if(
+        $column.columnName != 'del_flag' 
+        && $column.columnName != 'create_user' 
+        && $column.columnName != 'create_date'
+        && $column.columnName != 'update_user' 
+        && $column.columnName != 'update_date'
         && $column.columnName != 'trace_id'
         )
         ${context.javaBeanNameLF}.set${column.javaFieldNameUF}(input.get${column.javaFieldNameUF}());
@@ -35,9 +33,11 @@ public class ${context.javaBeanName}ReqConvert {
         ${context.javaBeanName} ${context.javaBeanNameLF} = new ${context.javaBeanName}();
         
         #foreach ($column in $columns)
-        #if($column.columnName != 'id' && $column.columnName != 'del_flag' 
-        && $column.columnName != 'create_user' && $column.columnName != 'create_date'
-        && $column.columnName != 'update_user' && $column.columnName != 'update_date'
+        #if($column.columnName != 'del_flag' 
+        && $column.columnName != 'create_user' 
+        && $column.columnName != 'create_date'
+        && $column.columnName != 'update_user' 
+        && $column.columnName != 'update_date'
         && $column.columnName != 'trace_id'
         )
         ${context.javaBeanNameLF}.set${column.javaFieldNameUF}(input.get${column.javaFieldNameUF}());
@@ -54,9 +54,12 @@ public class ${context.javaBeanName}ReqConvert {
         ${context.javaBeanName} ${context.javaBeanNameLF} = new ${context.javaBeanName}();
         
         #foreach ($column in $columns)
-        #if($column.columnName != 'id' && $column.columnName != 'del_flag' 
-        && $column.columnName != 'create_user' && $column.columnName != 'create_date'
-        && $column.columnName != 'update_user' && $column.columnName != 'update_date'
+        #if($column.columnName != 'id' 
+        && $column.columnName != 'del_flag' 
+        && $column.columnName != 'create_user' 
+        && $column.columnName != 'create_date'
+        && $column.columnName != 'update_user' 
+        && $column.columnName != 'update_date'
         && $column.columnName != 'trace_id'
         )
         ${context.javaBeanNameLF}.set${column.javaFieldNameUF}(input.get${column.javaFieldNameUF}());

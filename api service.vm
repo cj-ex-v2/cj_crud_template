@@ -6,6 +6,7 @@ import com.cjlabs.web.exception.BusinessExceptionEnum;
 import com.cjlabs.web.json.FmkJacksonUtil;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,27 +35,28 @@ public class ${context.javaBeanName}ApiService {
         return ${context.javaBeanName}Convert.toResp(${context.javaBeanNameLF});
     }
 
-    public boolean save(FmkRequest<${context.javaBeanName}> input) {
+    public ${context.javaBeanName} save(FmkRequest<${context.javaBeanName}ReqSave> input) {
         // 参数校验
         FmkCheckUtil.checkInput(Objects.isNull(input));
         FmkCheckUtil.checkInput(Objects.isNull(input.getRequest()));
 
-        ${context.javaBeanName} request = input.getRequest();
+        ${context.javaBeanName}ReqSave request = input.getRequest();
         if (Objects.isNull(request)) {
             log.info("${context.javaBeanName}ApiService|save|request is null");
-            return false;
+            return null;
         }
 
-        return ${context.javaBeanNameLF}Service.save(request);
+        ${context.javaBeanName} ${context.javaBeanNameLF} = ${context.javaBeanNameLF}Service.save(request);
+        return ${context.javaBeanName}Convert.toResp(${context.javaBeanNameLF});
     }
 
 
-    public boolean update(FmkRequest<${context.javaBeanName}> input) {
+    public boolean update(FmkRequest<${context.javaBeanName}ReqUpdate> input) {
         // 参数校验
         FmkCheckUtil.checkInput(Objects.isNull(input));
         FmkCheckUtil.checkInput(Objects.isNull(input.getRequest()));
 
-        ${context.javaBeanName} request = input.getRequest();
+        ${context.javaBeanName}ReqUpdate request = input.getRequest();
         if (Objects.isNull(request)) {
             log.info("${context.javaBeanName}ApiService|update|request is null");
             return false;
@@ -78,8 +80,8 @@ public class ${context.javaBeanName}ApiService {
     /**
      * 查询所有（不分页）
      */
-    public List<${context.javaBeanName}> listAll() {
-        List<${context.javaBeanName}> entityList = ${context.javaBeanNameLF}Service.listAllLimitService();
+    public List<${context.javaBeanName}Resp> listAll() {
+        List<${context.javaBeanName}> entityList = ${context.javaBeanNameLF}Service.listAll();
         List<${context.javaBeanName}Resp> respList = ${context.javaBeanName}Convert.toResp(entityList);
         return respList;
     }
@@ -87,13 +89,13 @@ public class ${context.javaBeanName}ApiService {
       /**
      * 分页查询
      */
-    public FmkPageResponse<${context.javaBeanName}> pageQuery(FmkRequest<${context.javaBeanName}ReqQuery> input) {
+    public FmkPageResponse<${context.javaBeanName}Resp> pageQuery(FmkRequest<${context.javaBeanName}ReqQuery> input) {
         // 参数校验
         FmkCheckUtil.checkInput(Objects.isNull(input));
         FmkCheckUtil.checkInput(Objects.isNull(input.getRequest()));
 
         // 执行分页查询
-        FmkPageResponse<${context.javaBeanName}> entityPage = ${context.javaBeanNameLF}WrapMapper.pageQuery(input);
+        FmkPageResponse<${context.javaBeanName}> entityPage = ${context.javaBeanNameLF}Service.pageQuery(input);
 
         if (Objects.isNull(entityPage) || CollectionUtils.isEmpty(entityPage.getRecords())) {
             return FmkPageResponse.empty();

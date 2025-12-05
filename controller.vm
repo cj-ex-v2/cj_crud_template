@@ -46,8 +46,8 @@ public class ${context.javaBeanName}Controller {
     /**
      * 根据 ID 查询
      */
-    @PostMapping("/get/{id}")
-    public FmkResult<${context.javaBeanName}Resp> getById(FmkRequest<Void> input) {
+    @PostMapping("/get/byId")
+    public FmkResult<${context.javaBeanName}Resp> getById(@RequestBody FmkRequest<Void> input) {
         ${context.javaBeanName}Resp resp = ${context.javaBeanNameLF}ApiService.getById(input);
         return FmkResult.success(resp);
     }
@@ -56,8 +56,8 @@ public class ${context.javaBeanName}Controller {
      * 新增
      */
     @PostMapping("/save")
-    public FmkResult<Boolean> save(@RequestBody FmkRequest<${context.javaBeanName}ReqSave> input) {
-        boolean result = ${context.javaBeanNameLF}ApiService.save(input);
+    public FmkResult<${context.javaBeanName}> save(@RequestBody FmkRequest<${context.javaBeanName}ReqSave> input) {
+        ${context.javaBeanName} result = ${context.javaBeanNameLF}ApiService.save(input);
         return FmkResult.success(result);
     }
 
@@ -74,7 +74,7 @@ public class ${context.javaBeanName}Controller {
      * 删除
      */
     @PostMapping("/delete/byId")
-    public FmkResult<Boolean> remove(@RequestBody FmkRequest<Void> input) {
+    public FmkResult<Boolean> delete(@RequestBody FmkRequest<Void> input) {
         boolean result = ${context.javaBeanNameLF}ApiService.deleteById(input);
         return FmkResult.success(result);
     }

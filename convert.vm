@@ -16,10 +16,7 @@ public class ${context.javaBeanName}Convert {
         ${context.javaBeanName}Resp ${context.javaBeanNameLF}Resp = new ${context.javaBeanName}Resp();
         
         #foreach ($column in $columns)
-        #if($column.columnName != 'id' && $column.columnName != 'del_flag' 
-        && $column.columnName != 'create_user' && $column.columnName != 'create_date'
-        && $column.columnName != 'update_user' && $column.columnName != 'update_date'
-        && $column.columnName != 'trace_id'
+        #if($column.columnName != 'del_flag' && $column.columnName != 'trace_id'
         )
         ${context.javaBeanNameLF}Resp.set${column.javaFieldNameUF}(input.get${column.javaFieldNameUF}());
         #end

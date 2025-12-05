@@ -2,7 +2,7 @@
 import com.cjlabs.db.domain.FmkPageResponse;
 import com.cjlabs.db.domain.FmkRequest;
 import com.cjlabs.web.check.FmkCheckUtil;
-import com.cjlabs.web.exception.BusinessExceptionEnum;
+import com.cjlabs.web.exception.Error200ExceptionEnum;
 import com.cjlabs.web.json.FmkJacksonUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,24 +34,23 @@ public class ${context.javaBeanName}Service {
         return ${context.javaBeanNameLF}WrapMapper.getById(id);
     }
 
-    public boolean save(${context.javaBeanName} request) {
-        if (Objects.isNull(request)) {
-        	log.info("${context.javaBeanName}Service|update|request is null");
-            return false;
-        }
+    public ${context.javaBeanName} save(${context.javaBeanName}ReqSave request) {
+        FmkCheckUtil.checkInput(Objects.isNull(request));
+        
+        ${context.javaBeanName} db = ${context.javaBeanName}ReqConvert.toDb(request);
 
         int saved = ${context.javaBeanNameLF}WrapMapper.save(request);
-        FmkCheckUtil.throwBusiness(saved == 0, BusinessExceptionEnum.DATA_NOT_FOUND);
-        return true;
+        FmkCheckUtil.throw200Error(saved == 0, Error200ExceptionEnum.DATA_NOT_FOUND);
+        return db;
     }
 
 
-    public boolean update(${context.javaBeanName} request) {
-        if (Objects.isNull(request)) {
-        	log.info("${context.javaBeanName}Service|update|request is null");
-            return false;
-        }
-        int updated = ${context.javaBeanNameLF}WrapMapper.updateById(request);
+    public boolean update(${context.javaBeanName}ReqUpdate request) {
+        FmkCheckUtil.checkInput(Objects.isNull(request));
+        
+        ${context.javaBeanName} db = ${context.javaBeanName}ReqConvert.toDb(request);
+        
+        int updated = ${context.javaBeanNameLF}WrapMapper.updateById(db);
         if (updated > 0) {
             log.info("${context.javaBeanName}Service|update|update={}|id={}", updated, request.getId());
             return true;
@@ -59,19 +58,13 @@ public class ${context.javaBeanName}Service {
         return false;
     }
 
-    public boolean deleteById(FmkRequest<Void> input) {
+    public boolean deleteById(String businessKey) {
         // 参数校验
-        FmkCheckUtil.checkInput(Objects.isNull(input));
-        FmkCheckUtil.checkInput(Objects.isNull(input.getBusinessKey()));
-
-        String businessKey = input.getBusinessKey();
-        if (businessKey == null) {
-        	log.info("${context.javaBeanName}Service|update|businessKey is null");
-            return false;
-        }
+        FmkCheckUtil.checkInput(StringUtils.isBlank(businessKey));
+        
         int deleted = ${context.javaBeanNameLF}WrapMapper.deleteById(businessKey);
-        if (removed > 0) {
-            log.info("${context.javaBeanName}Service|update|deleteById={}|id={}", deleted, businessKey);
+        if (deleted > 0) {
+            log.info("${context.javaBeanName}Service|deleteById|deleteById={}|id={}", deleted, businessKey);
             return true;
         }
         return false;
