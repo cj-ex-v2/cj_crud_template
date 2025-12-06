@@ -2,7 +2,6 @@
 import com.cjlabs.db.domain.FmkPageResponse;
 import com.cjlabs.db.domain.FmkRequest;
 import com.cjlabs.web.check.FmkCheckUtil;
-import com.cjlabs.web.exception.BusinessExceptionEnum;
 import com.cjlabs.web.json.FmkJacksonUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +34,7 @@ public class ${context.javaBeanName}ApiService {
         return ${context.javaBeanName}Convert.toResp(${context.javaBeanNameLF});
     }
 
-    public ${context.javaBeanName} save(FmkRequest<${context.javaBeanName}ReqSave> input) {
+    public ${context.javaBeanName}Resp save(FmkRequest<${context.javaBeanName}ReqSave> input) {
         // 参数校验
         FmkCheckUtil.checkInput(Objects.isNull(input));
         FmkCheckUtil.checkInput(Objects.isNull(input.getRequest()));

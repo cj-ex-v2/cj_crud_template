@@ -56,8 +56,8 @@ public class ${context.javaBeanName}Controller {
      * 新增
      */
     @PostMapping("/save")
-    public FmkResult<${context.javaBeanName}> save(@RequestBody FmkRequest<${context.javaBeanName}ReqSave> input) {
-        ${context.javaBeanName} result = ${context.javaBeanNameLF}ApiService.save(input);
+    public FmkResult<${context.javaBeanName}Resp> save(@RequestBody FmkRequest<${context.javaBeanName}ReqSave> input) {
+        ${context.javaBeanName}Resp result = ${context.javaBeanNameLF}ApiService.save(input);
         return FmkResult.success(result);
     }
 

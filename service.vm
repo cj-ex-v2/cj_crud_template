@@ -2,7 +2,7 @@
 import com.cjlabs.db.domain.FmkPageResponse;
 import com.cjlabs.db.domain.FmkRequest;
 import com.cjlabs.web.check.FmkCheckUtil;
-import com.cjlabs.web.exception.Error200ExceptionEnum;
+import com.cjlabs.domain.exception.Error200ExceptionEnum;
 import com.cjlabs.web.json.FmkJacksonUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class ${context.javaBeanName}Service {
         
         ${context.javaBeanName} db = ${context.javaBeanName}ReqConvert.toDb(request);
 
-        int saved = ${context.javaBeanNameLF}WrapMapper.save(request);
+        int saved = ${context.javaBeanNameLF}WrapMapper.save(db);
         FmkCheckUtil.throw200Error(saved == 0, Error200ExceptionEnum.DATA_NOT_FOUND);
         return db;
     }
